@@ -14,8 +14,8 @@ $(document).ready(function() {
 
     $("#input-username").change(function() {
         if ($(this).val() == "") {
-            $("#input-message").hide();
-            $("#input-send").hide();
+            $("#input-message").hide(400);
+            $("#input-send").hide(400);
         } else {
             $("#input-message").show(600);
             $("#input-send").show(600);
