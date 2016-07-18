@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="description" content="Shen - ChatOps" />
+        <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1" />
+
+        <title>Shen - ChatOps</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="css/main.css" />
+
+    </head>
+    <body>
+
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Shen</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="shen-welcome">
+                <h1>Shen</h1>
+                <p class="lead">Use this ChatOps to communicate with your team.</p>
+            </div>
+
+            <div class="panel panel-default" id="output-wrapper" style="display: none;">
+                <div class="panel-heading">Channel</div>
+                <ul class="list-group" id="output-channel">
+                </ul>
+            </div>
+
+            <textarea class="form-control noresize" style="display: none;" id="input-message" rows="5" disabled></textarea>
+
+            <div class="input-control">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">@</span>
+                    <input id="input-username" type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-info" style="display: none;" id="input-send" disabled>Send
+                            <span class="glyphicon glyphicon-ok"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <script src="js/jquery.min.js"></script>
+        <script src="js/adapter.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/render.js"></script>
+        <script src="js/main.js"></script>
+
+    </body>
+</html>
