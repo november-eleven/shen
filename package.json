@@ -1,0 +1,21 @@
+{
+  "name": "shen",
+  "version": "1.0.0",
+  "description": "A tiny ChatOps",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "gulp install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thomas LE ROUX <github@november-eleven.fr>",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "3.3.6",
+    "jquery": "2.2.4",
+    "webrtc-adapter": "1.4.0"
+  },
+  "devDependencies": {
+    "gulp": "3.9.1",
+    "gulp-changed": "1.3.0"
+  }
+}
