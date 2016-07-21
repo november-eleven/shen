@@ -2,7 +2,6 @@ package render
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	log "github.com/Sirupsen/logrus"
@@ -34,7 +33,9 @@ func JSON(w http.ResponseWriter, status int, v interface{}) {
 		w.WriteHeader(http.StatusInternalServerError)
 
 		if b, err = json.Marshal(Wrap(err)); err == nil {
-			write(w, b)
+			if _, err := w.Write(b); err != nil {
+				log.WithField("render", "write").Error(err)
+			}
 		}
 
 		return
@@ -42,22 +43,13 @@ func JSON(w http.ResponseWriter, status int, v interface{}) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
-	write(w, b)
-
+	if _, err := w.Write(b); err != nil {
+		log.WithField("render", "write").Error(err)
+	}
 }
 
 // NoContent will render nothing.
 func NoContent(w http.ResponseWriter) {
-
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusNoContent)
-	write(w, []byte{})
-
-}
-
-func write(w io.Writer, b []byte) {
-	if _, err := w.Write(b); err != nil {
-		log.WithField("render", "write").Error(err)
-	}
-
 }
