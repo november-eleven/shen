@@ -3,7 +3,7 @@
 const gulp = require('gulp');
 const changed = require('gulp-changed');
 
-gulp.task('install', ['install:webrtc', 'install:bootstrap', 'install:jquery', 'install:shen']);
+gulp.task('install', ['install:webrtc', 'install:bootstrap', 'install:jquery', 'install:simplepeer', 'install:shen']);
 
 gulp.task('install:webrtc', function() {
     return gulp.src('node_modules/webrtc-adapter/out/adapter.js')
@@ -16,6 +16,12 @@ gulp.task('install:jquery', function() {
         .pipe(changed('dist/js/'))
         .pipe(gulp.dest('dist/js/'));
 });
+
+gulp.task('install:simplepeer', function() {
+    return gulp.src('node_modules/simple-peer/simplepeer.min.*')
+        .pipe(changed('dist/js/'))
+        .pipe(gulp.dest('dist/js/'));
+})
 
 gulp.task('install:bootstrap', ['install:bootstrap:js', 'install:bootstrap:css', 'install:bootstrap:fonts']);
 
@@ -41,11 +47,8 @@ gulp.task('install:bootstrap:fonts', function() {
 });
 
 gulp.task('install:shen', function() {
-    return gulp.src('src/**/*')
+    return gulp.src('client/**/*')
         .pipe(changed('dist/'))
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('clean', function() {
-    del.sync(deletePaths);
-});

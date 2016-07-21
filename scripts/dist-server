@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd $(readlink -f `dirname $0`/..)
+
+go build
+mv shen dist/

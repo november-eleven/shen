@@ -5,16 +5,19 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "gulp install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint client/"
   },
   "author": "Thomas LE ROUX <github@november-eleven.fr>",
   "license": "MIT",
   "dependencies": {
     "bootstrap": "3.3.6",
     "jquery": "2.2.4",
-    "webrtc-adapter": "1.4.0"
+    "webrtc-adapter": "1.4.0",
+    "simple-peer": "6.0.4"
   },
   "devDependencies": {
+    "eslint": "3.1.1",
     "gulp": "3.9.1",
     "gulp-changed": "1.3.0"
   }

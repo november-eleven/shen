@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd $(readlink -f `dirname $0`/..)
+
+rm -rf dist/*
+rm -rf node_modules/
+rm -f shen
+rm -f shen.tar.gz
