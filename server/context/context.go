@@ -5,25 +5,30 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-type ContextRepository interface {
+// Repository define a mecanism to create or delete peers.
+type Repository interface {
 	Login() string
 	Logout(string)
 }
 
-type DefaultContextRepository struct {
+// DefaultRepository is a simple and a default implementation of Repository.
+type DefaultRepository struct {
 	exc container.ExchangeContainer
 	pc  container.PeersContainer
 }
 
-func (r *DefaultContextRepository) Login() string {
+// Login will create a new peer.
+func (r *DefaultRepository) Login() string {
 	return uuid.NewV4().String()
 }
 
-func (r *DefaultContextRepository) Logout(id string) {
+// Logout will delete and clean a peer.
+func (r *DefaultRepository) Logout(id string) {
 	r.exc.Flush(id)
 	r.pc.Remove(id)
 }
 
-func NewContextRepository(exc container.ExchangeContainer, pc container.PeersContainer) ContextRepository {
-	return &DefaultContextRepository{exc: exc, pc: pc}
+// NewRepository will create a new Repository.
+func NewRepository(exc container.ExchangeContainer, pc container.PeersContainer) Repository {
+	return &DefaultRepository{exc: exc, pc: pc}
 }

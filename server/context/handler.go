@@ -2,52 +2,61 @@ package context
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/november-eleven/shen/server/render"
 )
 
-type ContextPayload struct {
+var (
+	// ErrPeerRead is returned when an error has occurred while reading request body.
+	ErrPeerRead = errors.New("Cannot read request as Peer")
+
+	// ErrPeerParse is returned when an error has occurred while parsing json payload.
+	ErrPeerParse = errors.New("Cannot parse request as Peer")
+)
+
+// Peer define a remote client.
+type Peer struct {
 	ID string `json:"id"`
 }
 
-func LoginHandler(repository ContextRepository) func(w http.ResponseWriter, r *http.Request) {
+// LoginHandler will handle peers creation.
+func LoginHandler(repository Repository) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		p := ContextPayload{repository.Login()}
+		p := Peer{repository.Login()}
 		render.JSON(w, 200, p)
-		fmt.Printf("Login: %s\n", p.ID)
+		log.WithField("context", "login").Info(p.ID)
 
 	}
 }
 
-func LogoutHandler(repository ContextRepository) func(w http.ResponseWriter, r *http.Request) {
+// LogoutHandler will handle peers deletion.
+func LogoutHandler(repository Repository) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		b, err := ioutil.ReadAll(r.Body)
 
 		if err != nil {
-			// TODO
-			log.Printf("An error has occured: %s", err)
-			http.Error(w, "An error has occured", http.StatusInternalServerError)
+			log.WithField("context", "logout").Error(err)
+			render.JSON(w, http.StatusBadRequest, ErrPeerRead)
 			return
 		}
 
-		p := &ContextPayload{}
+		p := &Peer{}
 
 		if err := json.Unmarshal(b, p); err != nil {
-			// TODO
-			log.Printf("An error has occured: %s", err)
-			http.Error(w, "An error has occured", http.StatusInternalServerError)
+			log.WithField("context", "logout").Error(err)
+			render.JSON(w, http.StatusBadRequest, ErrPeerParse)
 			return
 		}
 
 		repository.Logout(p.ID)
 		render.NoContent(w)
-		fmt.Printf("Logout: %s\n", p.ID)
+		log.WithField("context", "logout").Info(p.ID)
 
 	}
 }
