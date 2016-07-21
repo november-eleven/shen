@@ -1,0 +1,25 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "browser": true,
+    "jquery": true,
+  },
+  "rules": {
+    "quotes": [1, "single"],
+    "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
+    "comma-dangle": [1, "always-multiline"],
+    "consistent-return": 0,
+    "semi": [2, "always"],
+    "eol-last": 1,
+    "no-undef": 0,
+    "prefer-const": 1,
+    "no-var": 0,
+    "no-unused-vars": 0,
+    "no-const-assign": 1,
+    "no-extra-boolean-cast": 0,
+    "no-console": 0,
+    "dot-notation": 1,
+    "no-debugger": 1
+  },
+}
