@@ -35,22 +35,9 @@ function onLogin(payload) {
 
     id = payload.id;
 
-    $.ajax({
-        url: '/api/peers',
-        method: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        data: id,
-        crossDomain: true,
-    })
-    .done(onRegisterSuccess)
-    .fail(onErrorHandler)
-
-}
-
-function onRegisterSuccess(list) {
     discovery = setTimeout(onPeerDiscovery, 0);
     handshake = setTimeout(onHandshake, 0);
+
 }
 
 function onPeerDiscovery() {
@@ -65,9 +52,27 @@ function onPeerDiscovery() {
         crossDomain: true,
     })
     .done(onPeerDiscoverySuccess)
-    .fail(onErrorHandler);
+    .fail(onErrorHandler)
+    .always(onRegister);
 
-    discovery = setTimeout(onPeerDiscovery, 60000);
+    var max = 60000;
+    var min = 100;
+
+    discovery = schedule(onPeerDiscovery, 100, 60000);
+
+}
+
+function onRegister() {
+
+    $.ajax({
+        url: '/api/peers',
+        method: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: id,
+        crossDomain: true,
+    })
+    .fail(function() {});
 
 }
 
@@ -87,8 +92,6 @@ function onPeerDiscoverySuccess(list) {
 
     });
 
-    onHandshake();
-
 }
 
 function onHandshake() {
@@ -103,7 +106,7 @@ function onHandshake() {
     .done(onHandshakeSuccess)
     .fail(onErrorHandler);
 
-    handshake = setTimeout(onHandshake, 5000);
+    handshake = schedule(onHandshake, 100, 5000);
 
 }
 
@@ -285,4 +288,8 @@ function onReceive(message) {
     if (handler != null) {
         handler.onMessage(message);
     }
+}
+
+function schedule(callback, min, max) {
+    return setTimeout(callback, (Math.random() * (max - min) + min));
 }
