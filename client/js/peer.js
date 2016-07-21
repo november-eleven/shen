@@ -81,11 +81,11 @@ function onPeerDiscoverySuccess(list) {
     list.map(function(payload) {
 
         if(payload == id) {
-            return
+            return;
         }
 
         if(linked[payload] || peers[payload]) {
-            return
+            return;
         }
 
         newPeer(id, payload, true);
@@ -115,11 +115,11 @@ function onHandshakeSuccess(list) {
     list.map(function(payload) {
 
         if(payload.id == id) {
-            return
+            return;
         }
 
         if(linked[payload.id]) {
-            return
+            return;
         }
 
         try {
@@ -143,7 +143,6 @@ function onHandshakeSuccess(list) {
 function removePeer(local, remote, clean) {
 
     var request = JSON.stringify({id: local});
-    var clean = clean || false;
 
     if(clean) {
         delete linked[remote];
@@ -164,17 +163,17 @@ function removePeer(local, remote, clean) {
 
 function newPeer(local, remote, initiator) {
 
-    var initiator = initiator || false;
+    var init = initiator || false;
 
     var peer = new SimplePeer({
-        initiator: initiator,
+        initiator: init,
         trickle: false,
         channelName: 'shen-channel',
         config: {
             'iceServers': [
                 { 'urls': 'stun:stun.services.mozilla.com' },
                 { 'urls': 'stun:stun.l.google.com:19302' },
-            ]
+            ],
         },
     });
 
@@ -211,7 +210,7 @@ function newPeer(local, remote, initiator) {
 
     peer.on('close', function() {
 
-        console.debug("Close: " + remote);
+        console.debug('Close: ' + remote);
         removePeer(id, remote, true);
         onClose();
 
@@ -241,7 +240,9 @@ function disconnect() {
             var peer = peers[key];
             peer.destroy();
 
-        } catch(e) {}
+        } catch(e) {
+            // Silent fail
+        }
     });
 
     peers = {};

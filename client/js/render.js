@@ -1,22 +1,22 @@
 'use strict';
 
 function onErrorHandler(e) {
-    console.error(e)
+    console.error(e);
 }
 
 function renderConnectCallback() {
-    $("#input-send").prop("disabled", false);
-    $("#input-message").prop("disabled", false);
+    $('#input-send').prop('disabled', false);
+    $('#input-message').prop('disabled', false);
 }
 
 function renderDisconnectCallback() {
-    $("#input-send").prop("disabled", true);
-    $("#input-message").prop("disabled", true);
+    $('#input-send').prop('disabled', true);
+    $('#input-message').prop('disabled', true);
 }
 
 function renderMessageCallback(message) {
-    $(renderMessageLine(message)).hide().appendTo($("#output-channel")).show('fast');
-    $("#output-wrapper").show(750);
+    $(renderMessageLine(message)).hide().appendTo($('#output-channel')).show('fast');
+    $('#output-wrapper').show(750);
 }
 
 function renderMessageLine(payload) {
@@ -27,7 +27,7 @@ function renderMessageLine(payload) {
     var me = payload.me || false;
 
     if(message == '') {
-        return ''
+        return '';
     }
 
     if(me) {
