@@ -52,6 +52,3 @@ gulp.task('install:shen', function() {
         .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('clean', function() {
-    del.sync(deletePaths);
-});
