@@ -5,6 +5,16 @@
  * **go v1.6.2**
  * **node v6.3.0**
 
+## Install source on local filesystem
+
+```bash
+cd $GOPATH
+mkdir -p src/github.com/november-eleven/
+cd src/github.com/november-eleven/
+git clone --recursive git@github.com:november-eleven/shen.git
+cd shen
+```
+
 ## Compile
 
 ```bash
