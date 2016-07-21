@@ -130,19 +130,22 @@ function onHandshakeSuccess(list) {
 
         } catch(e) {
             console.error('Handshake had an error:', e);
-            removePeer(id, payload.id);
+            removePeer(id, payload.id, true);
         }
 
     });
 
 }
 
-function removePeer(local, remote) {
+function removePeer(local, remote, clean) {
 
     var request = JSON.stringify({id: local});
+    var clean = clean || false;
 
-    delete linked[remote];
-    delete peers[remote];
+    if(clean) {
+        delete linked[remote];
+        delete peers[remote];
+    }
 
     $.ajax({
         url: '/api/peers/' + remote,
@@ -194,6 +197,7 @@ function newPeer(local, remote, initiator) {
         linked[remote] = true;
 
         console.debug('Connect: ' + remote);
+        removePeer(id, remote);
         onConnect();
 
     });
@@ -205,7 +209,7 @@ function newPeer(local, remote, initiator) {
     peer.on('close', function() {
 
         console.debug("Close: " + remote);
-        removePeer(id, remote);
+        removePeer(id, remote, true);
         onClose();
 
     });
