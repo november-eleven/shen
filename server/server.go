@@ -1,22 +1,29 @@
 package main
 
 import (
+	"fmt"
+	ctx "golang.org/x/net/context"
 	"net/http"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/november-eleven/shen/server/container"
 	"github.com/november-eleven/shen/server/context"
 	"github.com/november-eleven/shen/server/peers"
+	"github.com/november-eleven/shen/server/render"
 	"github.com/pressly/chi"
 	"github.com/pressly/chi/middleware"
 )
 
+// Options define service dependency.
 type Options struct {
 	peers      container.PeersContainer
 	exchange   container.ExchangeContainer
-	repository context.ContextRepository
+	repository context.Repository
+	port       uint64
 }
 
-func Start(o Options) {
+// Start will launch the shen service.
+func Start(o Options) error {
 
 	r := chi.NewRouter()
 
@@ -42,18 +49,17 @@ func Start(o Options) {
 	r.Post("/api/login", context.LoginHandler(o.repository))
 	r.Post("/api/logout", context.LogoutHandler(o.repository))
 
-	r.Get("/assets/*", http.StripPrefix("/assets/", http.FileServer(http.Dir("."))))
+	r.FileServer("/assets/", http.Dir("."))
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "index.html")
 	})
+	r.NotFound(func(ctx ctx.Context, w http.ResponseWriter, r *http.Request) {
+		render.JSON(w, http.StatusNotFound, fmt.Errorf("page not found"))
+	})
 
-	http.ListenAndServe(":3000", r)
+	addr := fmt.Sprintf(":%d", o.port)
 
-}
-
-type Foo struct {
-}
-
-func (f Foo) Server() {
+	log.Infof("Listening on %s\n", addr)
+	return http.ListenAndServe(addr, r)
 
 }
