@@ -3,25 +3,21 @@ all: dist
 dist: client server lint test
 
 client:
-	npm install
+	scripts/dist-client
 
 server:
-	go build
-	mv shen dist/
+	scripts/dist-server
 
 clean:
-	rm -rf dist/*
-	rm -rf node_modules/
-	rm -f shen
-	rm -f shen.tar.gz
+	scripts/clean
 
-lint:
+lint: client server
 	scripts/lint
 
-test:
+test: client server
 	scripts/test
 
 archive: dist
-	cd dist && tar -zcf '../shen.tar.gz' --exclude='.gitkeep' .
+	scripts/archive
 
 .PHONY: client server dist lint test archive

@@ -2,4 +2,5 @@
 
 cd $(readlink -f `dirname $0`/..)
 
-go test ./server/...
+go build
+mv shen dist/

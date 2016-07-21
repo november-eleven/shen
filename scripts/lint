@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $(readlink -f `dirname $0`/..)
+
 GOMETALINTER_PATH="${GOPATH}/bin/gometalinter"
 GOMETALINTER_URL="https://github.com/alecthomas/gometalinter"
 GOMETALINTER_OPTS="--vendor -j1 --disable=gotype --disable=dupl --enable=lll --enable=gofmt \

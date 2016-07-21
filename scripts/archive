@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd $(readlink -f `dirname $0`/..)/dist
+tar -zcf '../shen.tar.gz' --exclude='.gitkeep' .
+
