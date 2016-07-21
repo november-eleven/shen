@@ -5,11 +5,16 @@ import (
 	"sync"
 )
 
+// ExchangePayloadLimit define the maximum of waiting peers.
+const ExchangePayloadLimit = 256
+
+// ExchangePayload define a peer waiting to connect.
 type ExchangePayload struct {
 	ID  string          `json:"id"`
 	Raw json.RawMessage `json:"signal"`
 }
 
+// ExchangeContainer handle ExchangePayload storage.
 type ExchangeContainer interface {
 	Add(id string, payload ExchangePayload)
 	Remove(id string, payload ExchangePayload)
@@ -17,16 +22,20 @@ type ExchangeContainer interface {
 	Values(id string) []ExchangePayload
 }
 
+// SimpleExchangeContainer is a in-memory ExchangeContainer.
+// It uses a Read/Write mutex and split peer into several containers for concurrent access.
 type SimpleExchangeContainer struct {
 	mutex sync.RWMutex
 	db    map[string](*exchangePayloadContainer)
 }
 
+// NewExchangeContainer creates a new ExchangeContainer.
 func NewExchangeContainer() ExchangeContainer {
 	return &SimpleExchangeContainer{db: make(map[string](*exchangePayloadContainer))}
 
 }
 
+// Add will append a new ExchangePayload for a peer.
 func (s *SimpleExchangeContainer) Add(id string, e ExchangePayload) {
 
 	s.mutex.Lock()
@@ -44,6 +53,7 @@ func (s *SimpleExchangeContainer) Add(id string, e ExchangePayload) {
 
 }
 
+// Remove will delete a ExchangePayload for a peer.
 func (s *SimpleExchangeContainer) Remove(id string, e ExchangePayload) {
 
 	s.mutex.Lock()
@@ -56,6 +66,7 @@ func (s *SimpleExchangeContainer) Remove(id string, e ExchangePayload) {
 
 }
 
+// Flush will delete all ExchangePayload for a peer.
 func (s *SimpleExchangeContainer) Flush(id string) {
 
 	s.mutex.Lock()
@@ -65,6 +76,7 @@ func (s *SimpleExchangeContainer) Flush(id string) {
 
 }
 
+// Values return all ExchangePayload for a peer.
 func (s *SimpleExchangeContainer) Values(id string) []ExchangePayload {
 
 	s.mutex.RLock()
@@ -79,6 +91,8 @@ func (s *SimpleExchangeContainer) Values(id string) []ExchangePayload {
 
 }
 
+// For concurrent access, a peer has it own container.
+// It uses a Read/Write mutex.
 type exchangePayloadContainer struct {
 	mutex sync.RWMutex
 	db    map[string]ExchangePayload
@@ -89,7 +103,9 @@ func (c *exchangePayloadContainer) Add(e ExchangePayload) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	c.db[e.ID] = e
+	if len(c.db) < ExchangePayloadLimit {
+		c.db[e.ID] = e
+	}
 
 }
 
