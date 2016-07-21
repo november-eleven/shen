@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"fmt"
@@ -16,10 +16,10 @@ import (
 
 // Options define service dependency.
 type Options struct {
-	peers      container.PeersContainer
-	exchange   container.ExchangeContainer
-	repository context.Repository
-	port       uint64
+	Peers      container.PeersContainer
+	Exchange   container.ExchangeContainer
+	Repository context.Repository
+	Port       uint64
 }
 
 // Start will launch the shen service.
@@ -33,21 +33,21 @@ func Start(o Options) error {
 
 	r.Route("/api/peers", func(r chi.Router) {
 
-		r.Get("/", peers.ListHandler(o.peers))
-		r.Post("/", peers.RegisterHandler(o.peers))
+		r.Get("/", peers.ListHandler(o.Peers))
+		r.Post("/", peers.RegisterHandler(o.Peers))
 
 		r.Route("/:id", func(r chi.Router) {
 
-			r.Get("/", peers.PullHandler(o.exchange))
-			r.Post("/", peers.PushHandler(o.exchange))
-			r.Delete("/", peers.RemoveHandler(o.exchange))
+			r.Get("/", peers.PullHandler(o.Exchange))
+			r.Post("/", peers.PushHandler(o.Exchange))
+			r.Delete("/", peers.RemoveHandler(o.Exchange))
 
 		})
 
 	})
 
-	r.Post("/api/login", context.LoginHandler(o.repository))
-	r.Post("/api/logout", context.LogoutHandler(o.repository))
+	r.Post("/api/login", context.LoginHandler(o.Repository))
+	r.Post("/api/logout", context.LogoutHandler(o.Repository))
 
 	r.FileServer("/assets/", http.Dir("."))
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +57,7 @@ func Start(o Options) error {
 		render.JSON(w, http.StatusNotFound, fmt.Errorf("page not found"))
 	})
 
-	addr := fmt.Sprintf(":%d", o.port)
+	addr := fmt.Sprintf(":%d", o.Port)
 
 	log.Infof("Listening on %s\n", addr)
 	return http.ListenAndServe(addr, r)

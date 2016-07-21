@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/november-eleven/shen/server"
 	"github.com/november-eleven/shen/server/container"
 	"github.com/november-eleven/shen/server/context"
 )
@@ -29,11 +30,11 @@ func main() {
 	peers := container.NewPeersContainer()
 	repository := context.NewRepository(exchange, peers)
 
-	err := Start(Options{
-		exchange:   exchange,
-		peers:      peers,
-		repository: repository,
-		port:       port,
+	err := server.Start(server.Options{
+		Exchange:   exchange,
+		Peers:      peers,
+		Repository: repository,
+		Port:       port,
 	})
 
 	if err != nil {
