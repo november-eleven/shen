@@ -12,4 +12,7 @@ server:
 clean:
 	rm -r dist/*
 
+lint:
+	scripts/lint
+
 .PHONY: client server dist lint

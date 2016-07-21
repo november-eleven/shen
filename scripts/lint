@@ -1,0 +1,16 @@
+#!/bin/bash
+
+GOMETALINTER_PATH="${GOPATH}/bin/gometalinter"
+GOMETALINTER_URL="https://github.com/alecthomas/gometalinter"
+GOMETALINTER_OPTS="--vendor -j1 --disable=gotype --disable=dupl --enable=lll --enable=gofmt \
+	--deadline=120s --line-length=120 --tests"
+
+if [[ ! -x $GOMETALINTER_PATH ]]; then
+  error "Please install gometalinter: ${GOMETALINTER_URL}"
+  exit 2
+fi
+
+${GOMETALINTER_PATH} ${GOMETALINTER_OPTS} server/...
+
+npm run lint
+
